@@ -3,7 +3,11 @@ package com.app.motivation_services.service;
 import com.app.motivation_services.model.Note;
 import com.app.motivation_services.repository.NoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class NoteService {
@@ -17,5 +21,21 @@ public class NoteService {
 
     public Note saveNote(Note note) {
         return noteRepository.save(note);
+    }
+
+    public Optional<Note> getBookById(Long id) {
+        return noteRepository.findById(id);
+    }
+
+    public List<Note> getAllBooks() {
+        return noteRepository.findAll();
+    }
+
+    public void deleteNoteById(Long id) throws Exception {
+        try {
+            noteRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new Exception("Note with ID " + id + " not found");
+        }
     }
 }
