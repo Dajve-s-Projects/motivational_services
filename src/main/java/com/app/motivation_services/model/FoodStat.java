@@ -8,7 +8,7 @@ import lombok.NonNull;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(schema = "FoodStat", name = "FoodStat")
+@Table(schema = "FOODSTAT", name = "FOODSTAT")
 @Data
 public class FoodStat {
 
