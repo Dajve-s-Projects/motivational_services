@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@Table(schema = "EMOTION", name = "EMOTION")
+@Table(name = "EMOTION")
 @Data
 public class Emotion {
 
