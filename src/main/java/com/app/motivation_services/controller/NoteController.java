@@ -1,6 +1,8 @@
 package com.app.motivation_services.controller;
 
+import com.app.motivation_services.model.Emotion;
 import com.app.motivation_services.model.Note;
+import com.app.motivation_services.service.EmotionService;
 import com.app.motivation_services.service.NoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,10 +18,12 @@ import java.util.Optional;
 public class NoteController {
 
     private final NoteService noteService;
+    private final EmotionService emotionService;
 
     @Autowired
-    public NoteController(NoteService noteService) {
+    public NoteController(NoteService noteService, EmotionService emotionService) {
         this.noteService = noteService;
+        this.emotionService = emotionService;
     }
 
     @GetMapping("/note")
@@ -64,8 +68,19 @@ public class NoteController {
 
     // needs to be worked on
     @PostMapping("/note")
-    public ResponseEntity<Note> createNote(@RequestBody Note note) {
-        return new ResponseEntity<>(noteService.saveNote(note), HttpStatus.CREATED);
+    public ResponseEntity<String> createNote(@RequestBody Note note) {
+        Optional<Emotion> emotion = emotionService.getEmotionByEmotion(note.getEmotion());
+
+        if (emotion.isEmpty()) {
+            return new ResponseEntity<>(String.format("There is no emotion with the name of %s", note.getEmotion()),
+                    HttpStatus.NOT_FOUND);
+        }
+
+        Emotion addedEmotion = emotion.get();
+        note.setEmotion(addedEmotion);
+        noteService.saveNote(note);
+
+        return new ResponseEntity<>("Note created successfully", HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{note-id}")
