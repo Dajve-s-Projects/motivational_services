@@ -27,8 +27,7 @@ public class FoodStat {
     public FoodStat() {
     }
 
-    public FoodStat(Long id, @NonNull FoodType dailyStatus, @NonNull LocalDateTime dateSubmitted) {
-        this.id = id;
+    public FoodStat(@NonNull FoodType dailyStatus, @NonNull LocalDateTime dateSubmitted) {
         this.dailyStatus = dailyStatus;
         this.dateSubmitted = dateSubmitted;
     }

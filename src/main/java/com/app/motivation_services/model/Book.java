@@ -71,7 +71,6 @@ public class Book {
     }
 
     public Book(
-            Long id,
             @NonNull String title,
             @NonNull Author author,
             @NonNull String description,
@@ -86,7 +85,6 @@ public class Book {
             @NonNull String bookOpinion,
             @NonNull String specialNotes
     ) {
-        this.id = id;
         this.title = title;
         this.author = author;
         this.description = description;

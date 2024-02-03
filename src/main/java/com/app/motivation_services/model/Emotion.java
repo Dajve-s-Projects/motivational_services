@@ -20,8 +20,7 @@ public class Emotion {
     public Emotion() {
     }
 
-    public Emotion(Long id, @NonNull String emotion) {
-        this.id = id;
+    public Emotion(@NonNull String emotion) {
         this.emotion = emotion;
     }
 

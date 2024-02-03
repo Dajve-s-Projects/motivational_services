@@ -19,8 +19,7 @@ public class Author {
 
     public Author() {}
 
-    public Author(Long id, @NonNull String authorName) {
-        this.id = id;
+    public Author(@NonNull String authorName) {
         this.authorName = authorName;
     }
 

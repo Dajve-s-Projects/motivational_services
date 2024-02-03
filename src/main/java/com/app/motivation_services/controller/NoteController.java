@@ -62,6 +62,7 @@ public class NoteController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    // needs to be worked on
     @PostMapping("/note")
     public ResponseEntity<Note> createNote(@RequestBody Note note) {
         return new ResponseEntity<>(noteService.saveNote(note), HttpStatus.CREATED);

@@ -35,8 +35,7 @@ public class Note {
     public Note() {
     }
 
-    public Note(Long id, @NonNull String title, @NonNull String actualNote, Emotion emotion, @NonNull LocalDateTime dateOfNoteSubmission) {
-        this.id = id;
+    public Note(@NonNull String title, @NonNull String actualNote, Emotion emotion, @NonNull LocalDateTime dateOfNoteSubmission) {
         this.title = title;
         this.actualNote = actualNote;
         this.emotion = emotion;
