@@ -40,4 +40,20 @@ public class FoodStat {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public FoodType getDailyStatus() {
+        return dailyStatus;
+    }
+
+    public void setDailyStatus(FoodType dailyStatus) {
+        this.dailyStatus = dailyStatus;
+    }
+
+    public LocalDateTime getDateSubmitted() {
+        return dateSubmitted;
+    }
+
+    public void setDateSubmitted(LocalDateTime dateSubmitted) {
+        this.dateSubmitted = dateSubmitted;
+    }
 }

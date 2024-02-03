@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@Table(schema = "AUTHOR", name = "AUTHOR")
+@Table(schema = "Author", name = "Author")
 @Data
 public class Author {
 
@@ -30,5 +30,14 @@ public class Author {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @NonNull
+    public String getAuthorName() {
+        return authorName;
+    }
+
+    public void setAuthorName(@NonNull String authorName) {
+        this.authorName = authorName;
     }
 }

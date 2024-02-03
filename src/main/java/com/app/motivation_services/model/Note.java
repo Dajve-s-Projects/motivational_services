@@ -18,7 +18,15 @@ public class Note {
 
     @Column
     @NonNull
+    private String title;
+
+    @Column
+    @NonNull
     private String actualNote;
+
+    @ManyToOne
+    @JoinColumn(name = "emotion_id", nullable = false)
+    private Emotion emotion;
 
     @Column
     @NonNull
@@ -27,16 +35,47 @@ public class Note {
     public Note() {
     }
 
-    public Note(Long id, @NonNull String ActualNote) {
+    public Note(Long id, @NonNull String title, @NonNull String actualNote, Emotion emotion, @NonNull LocalDateTime dateOfNoteSubmission) {
         this.id = id;
-        this.actualNote = ActualNote;
+        this.title = title;
+        this.actualNote = actualNote;
+        this.emotion = emotion;
+        this.dateOfNoteSubmission = dateOfNoteSubmission;
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getActualNote() {
+        return actualNote;
+    }
+
+    public void setActualNote(String actualNote) {
+        this.actualNote = actualNote;
+    }
+
+    public Emotion getEmotion() {
+        return emotion;
+    }
+
+    public void setEmotion(Emotion emotion) {
+        this.emotion = emotion;
+    }
+
+    public LocalDateTime getDateOfNoteSubmission() {
+        return dateOfNoteSubmission;
+    }
+
+    public void setDateOfNoteSubmission(LocalDateTime dateOfNoteSubmission) {
+        this.dateOfNoteSubmission = dateOfNoteSubmission;
     }
 }
