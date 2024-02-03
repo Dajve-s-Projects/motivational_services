@@ -52,7 +52,7 @@ public class NoteController {
     }
 
     @PutMapping("/{note-id}")
-    public ResponseEntity<Note> updateNoteById(@PathVariable("note-id") Long id, @RequestBody Note newNoteData) {
+    public ResponseEntity<?> updateNoteById(@PathVariable("note-id") Long id, @RequestBody Note newNoteData) {
         Optional<Note> oldNoteData = noteService.getBookById(id);
 
         if (oldNoteData.isPresent()) {
@@ -63,10 +63,9 @@ public class NoteController {
             Note noteObj = noteService.saveNote(updatedNoteData);
             return new ResponseEntity<>(noteObj, HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("No note found with id of " + id, HttpStatus.NOT_FOUND);
     }
 
-    // needs to be worked on
     @PostMapping("/note")
     public ResponseEntity<String> createNote(@RequestBody Note note) {
         Optional<Emotion> emotion = emotionService.getEmotionByEmotion(note.getEmotion());
