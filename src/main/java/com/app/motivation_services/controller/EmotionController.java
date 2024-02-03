@@ -36,11 +36,6 @@ public class EmotionController {
         }
     }
 
-//    @GetMapping("emotion")
-//    public Emotion getEmotionByEmotion() {
-//
-//    }
-
     @PostMapping("/emotion")
     public ResponseEntity<Emotion> addEmotion(@RequestBody Emotion newEmotion) {
         Emotion addedEmotion = emotionService.addEmotion(newEmotion);
