@@ -1,10 +1,8 @@
 package com.app.motivation_services.model;
 
-import com.app.motivation_services.emums.FoodType;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NonNull;
-
+import io.micrometer.common.lang.NonNull;
 import java.time.LocalDateTime;
 
 @Entity
@@ -16,18 +14,18 @@ public class FoodStat {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column
+    @Column(name = "DAILYSTATUS")
     @NonNull
-    private FoodType dailyStatus;
+    private String dailyStatus;
 
-    @Column
+    @Column(name = "DATESUBMITTED")
     @NonNull
     private LocalDateTime dateSubmitted;
 
     public FoodStat() {
     }
 
-    public FoodStat(@NonNull FoodType dailyStatus, @NonNull LocalDateTime dateSubmitted) {
+    public FoodStat(@NonNull String dailyStatus, @NonNull LocalDateTime dateSubmitted) {
         this.dailyStatus = dailyStatus;
         this.dateSubmitted = dateSubmitted;
     }
@@ -40,11 +38,11 @@ public class FoodStat {
         this.id = id;
     }
 
-    public FoodType getDailyStatus() {
+    public String getDailyStatus() {
         return dailyStatus;
     }
 
-    public void setDailyStatus(FoodType dailyStatus) {
+    public void setDailyStatus(String dailyStatus) {
         this.dailyStatus = dailyStatus;
     }
 
