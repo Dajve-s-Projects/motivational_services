@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AuthorService {
@@ -23,5 +24,12 @@ public class AuthorService {
 
     public void addAuthor(Author author) {
         authorRepository.save(author);
+    }
+
+    public Optional<Author> getAuthorByAuthorName(String authorName) {
+        return authorRepository.findAll()
+                .stream()
+                .filter(author -> author.getAuthorName().equals(authorName))
+                .findFirst();
     }
 }
