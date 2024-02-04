@@ -2,6 +2,7 @@ package com.app.motivation_services.controller;
 
 import com.app.motivation_services.model.Author;
 import com.app.motivation_services.model.Book;
+import com.app.motivation_services.model.Note;
 import com.app.motivation_services.service.AuthorService;
 import com.app.motivation_services.service.BookService;
 import jdk.jfr.Description;
@@ -88,4 +89,36 @@ public class BookController {
 
         return new ResponseEntity<>("Book successfully made", HttpStatus.CREATED);
     }
+
+    @PutMapping("/update/book/{book-id}")
+    @Description("Update a book by ID")
+    public ResponseEntity<?> updateBookById(@PathVariable("book-id") Long id, @RequestBody Book book) {
+        Optional<Book> bookById = bookService.getBookById(id);
+
+        if (bookById.isPresent()) {
+            Book existingBook = bookById.get();
+
+            Author existingAuthor = existingBook.getAuthor();
+
+            existingBook.setTitle(book.getTitle());
+            existingBook.setAuthor(existingAuthor);
+            existingBook.setDescription(book.getDescription());
+            existingBook.setTotalChapters(book.getTotalChapters());
+            existingBook.setCurrentPage(book.getCurrentPage());
+            existingBook.setTotalPages(book.getTotalPages());
+            existingBook.setCurrentChapter(book.getCurrentChapter());
+            existingBook.setRating(book.getRating());
+            existingBook.setAlreadyRead(book.isAlreadyRead());
+            existingBook.setStartReadingDate(book.getStartReadingDate());
+            existingBook.setEndReadingDate(book.getEndReadingDate());
+            existingBook.setBookOpinion(book.getBookOpinion());
+            existingBook.setSpecialNotes(book.getSpecialNotes());
+
+            bookService.updateBook(existingBook);
+            return new ResponseEntity<>(existingBook, HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("No book found with id of " + id, HttpStatus.NOT_FOUND);
+    }
+
 }
