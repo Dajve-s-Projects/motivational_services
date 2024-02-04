@@ -4,6 +4,7 @@ import com.app.motivation_services.model.Emotion;
 import com.app.motivation_services.model.Note;
 import com.app.motivation_services.service.EmotionService;
 import com.app.motivation_services.service.NoteService;
+import jdk.jfr.Description;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,7 @@ public class NoteController {
     }
 
     @GetMapping("/note")
+    @Description("Get all notes")
     public ResponseEntity<List<Note>> getAllNotes() {
         try {
             List<Note> notesList = new ArrayList<>(noteService.getAllBooks());
@@ -42,6 +44,7 @@ public class NoteController {
     }
 
     @GetMapping("/{note-id}")
+    @Description("Get note by Id")
     public ResponseEntity<Note> getNoteById(@PathVariable("note-id") Long id) {
         Optional<Note> note = noteService.getBookById(id);
 
@@ -52,6 +55,7 @@ public class NoteController {
     }
 
     @PutMapping("/{note-id}")
+    @Description("Update note by Id")
     public ResponseEntity<?> updateNoteById(@PathVariable("note-id") Long id, @RequestBody Note newNoteData) {
         Optional<Note> oldNoteData = noteService.getBookById(id);
 
@@ -67,6 +71,7 @@ public class NoteController {
     }
 
     @PostMapping("/note")
+    @Description("Create a note")
     public ResponseEntity<String> createNote(@RequestBody Note note) {
         Optional<Emotion> emotion = emotionService.getEmotionByEmotion(note.getEmotion());
 
@@ -83,6 +88,7 @@ public class NoteController {
     }
 
     @DeleteMapping("/{note-id}")
+    @Description("Delete a note by Id")
     public ResponseEntity<Object> deleteNoteById(@PathVariable("note-id") Long id) {
         Optional<Note> oldNoteData = noteService.getBookById(id);
 

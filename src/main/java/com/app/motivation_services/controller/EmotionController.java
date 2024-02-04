@@ -2,6 +2,7 @@ package com.app.motivation_services.controller;
 
 import com.app.motivation_services.model.Emotion;
 import com.app.motivation_services.service.EmotionService;
+import jdk.jfr.Description;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ public class EmotionController {
     }
 
     @GetMapping("/emotion")
+    @Description("Get all emotions")
     public ResponseEntity<List<Emotion>> getAllEmotions() {
         try {
             List<Emotion> emotionsList = new ArrayList<>(emotionService.getAllEmotions());
@@ -37,6 +39,7 @@ public class EmotionController {
     }
 
     @PostMapping("/emotion")
+    @Description("Add an emotion")
     public ResponseEntity<Emotion> addEmotion(@RequestBody Emotion newEmotion) {
         Emotion addedEmotion = emotionService.addEmotion(newEmotion);
         return new ResponseEntity<>(addedEmotion, HttpStatus.CREATED);

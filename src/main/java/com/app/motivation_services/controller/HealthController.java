@@ -1,6 +1,7 @@
 package com.app.motivation_services.controller;
 
 import com.app.motivation_services.service.HealthService;
+import jdk.jfr.Description;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ public class HealthController {
     private HealthService healthService;
 
     @GetMapping("/health")
+    @Description("Check health of the service")
     public ResponseEntity<String> healthCheck() {
         String healthResponse = healthService.healthCheck();
         return ResponseEntity.ok(healthResponse);
