@@ -43,7 +43,7 @@ public class NoteController {
         }
     }
 
-    @GetMapping("/{note-id}")
+    @GetMapping("/note/{note-id}")
     @Description("Get note by Id")
     public ResponseEntity<Note> getNoteById(@PathVariable("note-id") Long id) {
         Optional<Note> note = noteService.getBookById(id);
