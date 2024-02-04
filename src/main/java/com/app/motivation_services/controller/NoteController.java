@@ -31,7 +31,7 @@ public class NoteController {
     @Description("Get all notes")
     public ResponseEntity<List<Note>> getAllNotes() {
         try {
-            List<Note> notesList = new ArrayList<>(noteService.getAllBooks());
+            List<Note> notesList = new ArrayList<>(noteService.getAllNotes());
 
             if (notesList.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -46,7 +46,7 @@ public class NoteController {
     @GetMapping("/note/{note-id}")
     @Description("Get note by Id")
     public ResponseEntity<Note> getNoteById(@PathVariable("note-id") Long id) {
-        Optional<Note> note = noteService.getBookById(id);
+        Optional<Note> note = noteService.getNoteById(id);
 
         return note.map(
                         singleNote -> new ResponseEntity<>(singleNote, HttpStatus.OK))
@@ -57,7 +57,7 @@ public class NoteController {
     @PutMapping("/update/note/{note-id}")
     @Description("Update note by Id")
     public ResponseEntity<?> updateNoteById(@PathVariable("note-id") Long id, @RequestBody Note newNoteData) {
-        Optional<Note> oldNoteData = noteService.getBookById(id);
+        Optional<Note> oldNoteData = noteService.getNoteById(id);
 
         if (oldNoteData.isPresent()) {
             Note updatedNoteData = oldNoteData.get();
@@ -92,7 +92,7 @@ public class NoteController {
     @DeleteMapping("/delete/{note-id}")
     @Description("Delete a note by Id")
     public ResponseEntity<Object> deleteNoteById(@PathVariable("note-id") Long id) {
-        Optional<Note> oldNoteData = noteService.getBookById(id);
+        Optional<Note> oldNoteData = noteService.getNoteById(id);
 
         if (oldNoteData.isPresent()) {
             try {

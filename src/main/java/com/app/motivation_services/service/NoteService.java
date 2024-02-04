@@ -19,15 +19,15 @@ public class NoteService {
         this.noteRepository = noteRepository;
     }
 
-    public Note saveNote(Note note) {
-        return noteRepository.save(note);
+    public void saveNote(Note note) {
+        noteRepository.save(note);
     }
 
-    public Optional<Note> getBookById(Long id) {
+    public Optional<Note> getNoteById(Long id) {
         return noteRepository.findById(id);
     }
 
-    public List<Note> getAllBooks() {
+    public List<Note> getAllNotes() {
         return noteRepository.findAll();
     }
 
