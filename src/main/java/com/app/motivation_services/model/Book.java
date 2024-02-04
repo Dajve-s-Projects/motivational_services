@@ -15,7 +15,7 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column
+    @Column(name = "TITLE")
     @NonNull
     private String title;
 
@@ -23,47 +23,47 @@ public class Book {
     @JoinColumn(name = "author_id", nullable = false)
     private Author author;
 
-    @Column
+    @Column(name = "DESCRIPTION")
     @NonNull
     private String description;
 
-    @Column
+    @Column(name = "TOTALCHAPTERS")
     @NonNull
     private int totalChapters;
 
-    @Column
+    @Column(name = "CURRENTCHAPTER")
     @NonNull
     private int currentChapter;
 
-    @Column
+    @Column(name = "TOTALPAGES")
     @NonNull
     private int totalPages;
 
-    @Column
+    @Column(name = "CURRENTPAGE")
     @NonNull
     private int currentPage;
 
-    @Column
+    @Column(name = "RATING")
     @NonNull
     private double rating;
 
-    @Column
+    @Column(name = "ISALREADYREAD")
     @NonNull
     private boolean isAlreadyRead;
 
-    @Column
+    @Column(name ="STARTREADINGDATE" )
     @NonNull
     private LocalDateTime startReadingDate;
 
-    @Column
+    @Column(name ="ENDREADINGDATE" )
     @NonNull
     private LocalDateTime endReadingDate;
 
-    @Column
+    @Column(name ="BOOKOPINION" )
     @NonNull
     private String bookOpinion;
 
-    @Column
+    @Column(name = "SPECIALNOTES")
     @NonNull
     private String specialNotes;
 
@@ -172,7 +172,7 @@ public class Book {
         this.rating = rating;
     }
 
-    public boolean isAlreadyRead() {
+    public boolean getIsAlreadyRead() {
         return isAlreadyRead;
     }
 
