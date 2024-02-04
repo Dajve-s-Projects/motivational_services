@@ -23,4 +23,9 @@ public class Emotion {
     private String emotion;
 
     public Emotion() {}
+
+    // Constructor with a string argument
+    public Emotion(String emotion) {
+        this.emotion = emotion;
+    }
 }
