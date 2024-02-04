@@ -54,23 +54,25 @@ public class NoteController {
                 );
     }
 
-    @PutMapping("/{note-id}")
+    @PutMapping("/update/note/{note-id}")
     @Description("Update note by Id")
     public ResponseEntity<?> updateNoteById(@PathVariable("note-id") Long id, @RequestBody Note newNoteData) {
         Optional<Note> oldNoteData = noteService.getBookById(id);
 
         if (oldNoteData.isPresent()) {
             Note updatedNoteData = oldNoteData.get();
+            updatedNoteData.setTitle(newNoteData.getTitle());
             updatedNoteData.setActualNote(newNoteData.getActualNote());
+            updatedNoteData.setEmotion(newNoteData.getEmotion());
             updatedNoteData.setDateOfNoteSubmission(newNoteData.getDateOfNoteSubmission());
 
-            Note noteObj = noteService.saveNote(updatedNoteData);
-            return new ResponseEntity<>(noteObj, HttpStatus.OK);
+            noteService.saveNote(updatedNoteData);
+            return new ResponseEntity<>(updatedNoteData, HttpStatus.OK);
         }
         return new ResponseEntity<>("No note found with id of " + id, HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping("/note")
+    @PostMapping("/create/note")
     @Description("Create a note")
     public ResponseEntity<String> createNote(@RequestBody Note note) {
         Optional<Emotion> emotion = emotionService.getEmotionByEmotion(note.getEmotion());
@@ -87,7 +89,7 @@ public class NoteController {
         return new ResponseEntity<>("Note created successfully", HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{note-id}")
+    @DeleteMapping("/delete/{note-id}")
     @Description("Delete a note by Id")
     public ResponseEntity<Object> deleteNoteById(@PathVariable("note-id") Long id) {
         Optional<Note> oldNoteData = noteService.getBookById(id);
