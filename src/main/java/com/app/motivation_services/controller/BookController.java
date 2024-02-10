@@ -2,7 +2,6 @@ package com.app.motivation_services.controller;
 
 import com.app.motivation_services.model.Author;
 import com.app.motivation_services.model.Book;
-import com.app.motivation_services.model.Note;
 import com.app.motivation_services.service.AuthorService;
 import com.app.motivation_services.service.BookService;
 import jdk.jfr.Description;
@@ -121,4 +120,15 @@ public class BookController {
         return new ResponseEntity<>("No book found with id of " + id, HttpStatus.NOT_FOUND);
     }
 
+    @GetMapping("/book/read")
+    @Description("Returns all data for books read or not read, depending on query param")
+    public ResponseEntity<List<Book>> getReadBooks(@RequestParam boolean read) {
+        if (read) {
+            List<Book> allReadBooks = bookService.getBookInReading();
+            return new ResponseEntity<>(allReadBooks, HttpStatus.OK);
+        }
+
+        List<Book> allUnreadBooks = bookService.getAllUnreadBooks();
+        return new ResponseEntity<>(allUnreadBooks, HttpStatus.OK);
+    }
 }

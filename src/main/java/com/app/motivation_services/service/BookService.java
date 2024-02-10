@@ -33,4 +33,19 @@ public class BookService {
     public void updateBook(Book book) {
         bookRepository.save(book);
     }
+
+    public List<Book> getBookInReading() {
+        List<Book> readBook = bookRepository.getBookThatsCurrentlyBeingRead()
+                .stream()
+                .filter(Book::isAlreadyRead).toList();
+
+        if (readBook.size() > 1)
+            throw new Error("There are multiple books that are in the 'currently reading' state");
+
+        return readBook;
+    }
+
+    public List<Book> getAllUnreadBooks() {
+        return bookRepository.getAllBooksThatAreAlreadyRead();
+    }
 }
