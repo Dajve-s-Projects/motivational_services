@@ -126,7 +126,8 @@ public class BookController {
     @GetMapping("/book/read")
     @Description("Returns all data for books read or not read, depending on query param")
     public ResponseEntity<List<Book>> getReadBooks(@RequestParam String read) {
-        if (Objects.equals(read, "true".toLowerCase())) {
+        // find out how to use debug so that you can see why data is returning regardless of the query param
+        if (read.equalsIgnoreCase("true")) {
             List<Book> allReadBooks = bookService.getBookInReading();
             return new ResponseEntity<>(allReadBooks, HttpStatus.OK);
         }
