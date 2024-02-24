@@ -77,6 +77,11 @@ public class Book {
 
     @Getter
     @Setter
+    @Column(name = "IsCurrentlyReading")
+    private boolean isCurrentlyReading;
+
+    @Getter
+    @Setter
     @Column(name = "BOOKOPINION")
     private String bookOpinion;
 

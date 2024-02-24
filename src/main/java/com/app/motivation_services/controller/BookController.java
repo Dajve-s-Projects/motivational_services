@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -122,8 +123,8 @@ public class BookController {
 
     @GetMapping("/book/read")
     @Description("Returns all data for books read or not read, depending on query param")
-    public ResponseEntity<List<Book>> getReadBooks(@RequestParam boolean read) {
-        if (read) {
+    public ResponseEntity<List<Book>> getReadBooks(@RequestParam String read) {
+        if (Objects.equals(read, "true".toLowerCase())) {
             List<Book> allReadBooks = bookService.getBookInReading();
             return new ResponseEntity<>(allReadBooks, HttpStatus.OK);
         }
