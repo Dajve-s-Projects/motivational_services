@@ -77,7 +77,7 @@ public class Book {
 
     @Getter
     @Setter
-    @Column(name = "IsCurrentlyReading")
+    @Column(name = "ISCURRENTLYREADING")
     private boolean isCurrentlyReading;
 
     @Getter

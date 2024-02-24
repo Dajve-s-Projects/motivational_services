@@ -80,6 +80,7 @@ public class BookController {
         book.setCurrentPage(newBook.getCurrentPage());
         book.setRating(newBook.getRating());
         book.setAlreadyRead(newBook.isAlreadyRead());
+        book.setAlreadyRead(newBook.isCurrentlyReading());
         book.setStartReadingDate(newBook.getStartReadingDate());
         book.setEndReadingDate(newBook.getEndReadingDate());
         book.setBookOpinion(newBook.getBookOpinion());
@@ -109,6 +110,7 @@ public class BookController {
             existingBook.setCurrentChapter(book.getCurrentChapter());
             existingBook.setRating(book.getRating());
             existingBook.setAlreadyRead(book.isAlreadyRead());
+            existingBook.setAlreadyRead(book.isCurrentlyReading());
             existingBook.setStartReadingDate(book.getStartReadingDate());
             existingBook.setEndReadingDate(book.getEndReadingDate());
             existingBook.setBookOpinion(book.getBookOpinion());
