@@ -124,11 +124,11 @@ public class BookController {
 
     @GetMapping("/book/filter")
     @Description("Returns all books that have NOT been read or return a SINGLE" +
-            "book that is currently being ran depending on the 'read' parameter")
+            "book that is currently being read depending on the 'read' parameter")
     public ResponseEntity<List<Book>> getReadBooks(@RequestParam(required = false) Boolean read) {
-        if (read == null) {
-            // if parameter is null return all books
-            try {
+        try {
+            if (read == null) {
+                // If parameter is null, return all books
                 List<Book> booksList = new ArrayList<>(bookService.getAllBooks());
 
                 if (booksList.isEmpty()) {
@@ -136,21 +136,17 @@ public class BookController {
                 }
 
                 return new ResponseEntity<>(booksList, HttpStatus.OK);
-            } catch (Exception e) {
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            } else if (read) {
+                // Return book currently being read
+                List<Book> bookCurrentlyBeingRead = bookService.getBookInReading();
+                return new ResponseEntity<>(bookCurrentlyBeingRead, HttpStatus.OK);
+            } else {
+                // Return unread books
+                List<Book> unreadBooks = bookService.getAllUnreadBooks();
+                return new ResponseEntity<>(unreadBooks, HttpStatus.OK);
             }
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        if (read) {
-            List<Book> bookCurrentlyBeingRead = bookService.getBookInReading();
-            return new ResponseEntity<>(bookCurrentlyBeingRead, HttpStatus.OK);
-        }
-
-        if (!read) {
-            List<Book> unreadBooks = bookService.getAllUnreadBooks();
-            return new ResponseEntity<>(unreadBooks, HttpStatus.OK);
-        }
-
-        return null;
     }
 }
