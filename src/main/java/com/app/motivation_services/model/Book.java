@@ -75,8 +75,6 @@ public class Book {
     @Column(name = "ENDREADINGDATE")
     private LocalDateTime endReadingDate;
 
-    @Getter
-    @Setter
     @Column(name = "ISCURRENTLYREADING")
     private boolean isCurrentlyReading;
 
@@ -91,4 +89,12 @@ public class Book {
     private String specialNotes;
 
     public Book() {}
+
+    public void setIsCurrentlyReading(boolean currentlyReading) {
+        this.isCurrentlyReading = currentlyReading;
+    }
+
+    public boolean getIsCurrentlyReading() {
+        return isCurrentlyReading;
+    }
 }

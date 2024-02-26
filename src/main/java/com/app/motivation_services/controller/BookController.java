@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -80,7 +79,7 @@ public class BookController {
         book.setCurrentPage(newBook.getCurrentPage());
         book.setRating(newBook.getRating());
         book.setAlreadyRead(newBook.isAlreadyRead());
-        book.setAlreadyRead(newBook.isCurrentlyReading());
+        book.setIsCurrentlyReading(newBook.getIsCurrentlyReading());
         book.setStartReadingDate(newBook.getStartReadingDate());
         book.setEndReadingDate(newBook.getEndReadingDate());
         book.setBookOpinion(newBook.getBookOpinion());
@@ -110,7 +109,7 @@ public class BookController {
             existingBook.setCurrentChapter(book.getCurrentChapter());
             existingBook.setRating(book.getRating());
             existingBook.setAlreadyRead(book.isAlreadyRead());
-            existingBook.setAlreadyRead(book.isCurrentlyReading());
+            existingBook.setIsCurrentlyReading(book.getIsCurrentlyReading());
             existingBook.setStartReadingDate(book.getStartReadingDate());
             existingBook.setEndReadingDate(book.getEndReadingDate());
             existingBook.setBookOpinion(book.getBookOpinion());
@@ -123,16 +122,35 @@ public class BookController {
         return new ResponseEntity<>("No book found with id of " + id, HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/book/read")
-    @Description("Returns all data for books read or not read, depending on query param")
-    public ResponseEntity<List<Book>> getReadBooks(@RequestParam String read) {
-        // find out how to use debug so that you can see why data is returning regardless of the query param
-        if (read.equalsIgnoreCase("true")) {
-            List<Book> allReadBooks = bookService.getBookInReading();
-            return new ResponseEntity<>(allReadBooks, HttpStatus.OK);
+    @GetMapping("/book/filter")
+    @Description("Returns all books that have NOT been read or return a SINGLE" +
+            "book that is currently being ran depending on the 'read' parameter")
+    public ResponseEntity<List<Book>> getReadBooks(@RequestParam(required = false) Boolean read) {
+        if (read == null) {
+            // if parameter is null return all books
+            try {
+                List<Book> booksList = new ArrayList<>(bookService.getAllBooks());
+
+                if (booksList.isEmpty()) {
+                    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                }
+
+                return new ResponseEntity<>(booksList, HttpStatus.OK);
+            } catch (Exception e) {
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
         }
 
-        List<Book> allUnreadBooks = bookService.getAllUnreadBooks();
-        return new ResponseEntity<>(allUnreadBooks, HttpStatus.OK);
+        if (read) {
+            List<Book> bookCurrentlyBeingRead = bookService.getBookInReading();
+            return new ResponseEntity<>(bookCurrentlyBeingRead, HttpStatus.OK);
+        }
+
+        if (!read) {
+            List<Book> unreadBooks = bookService.getAllUnreadBooks();
+            return new ResponseEntity<>(unreadBooks, HttpStatus.OK);
+        }
+
+        return null;
     }
 }

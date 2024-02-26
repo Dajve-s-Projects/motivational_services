@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
-    @Query("SELECT b FROM Book b WHERE b.isAlreadyRead = true")
+    @Query("SELECT b FROM Book b WHERE b.isCurrentlyReading = true")
     List<Book> getBookThatsCurrentlyBeingRead();
 
     @Query("SELECT b FROM Book b WHERE b.isAlreadyRead = false")
