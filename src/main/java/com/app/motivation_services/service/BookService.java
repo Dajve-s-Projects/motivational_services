@@ -48,4 +48,14 @@ public class BookService {
     public List<Book> getAllUnreadBooks() {
         return bookRepository.getAllBooksThatAreAlreadyRead();
     }
+
+    public boolean isBookAlreadyRead(Long id) {
+        Optional<Book> bookById = getBookById(id);
+        return bookById.map(Book::isAlreadyRead).orElse(false);
+    }
+
+    public void markBookAsCurrentlyReading(Long id) {
+        Book bookById = getBookById(id).get();
+        bookRepository.updateBookToReadById(bookById.getId());
+    }
 }

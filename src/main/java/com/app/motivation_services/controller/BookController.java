@@ -149,4 +149,20 @@ public class BookController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PutMapping("/book/read/{book-id}")
+    @Description("Read a book, that is already not read")
+    public ResponseEntity<String> readBookById(@PathVariable("book-id") Long id) {
+        Optional<Book> bookById = bookService.getBookById(id);
+
+        if (bookById.isEmpty())
+            return new ResponseEntity<>("There is no book with the id: " + id, HttpStatus.NOT_FOUND);
+
+        if (bookService.isBookAlreadyRead(id))
+            return new ResponseEntity<>("This book is already read", HttpStatus.CONFLICT);
+
+        bookService.markBookAsCurrentlyReading(id);
+
+        return new ResponseEntity<>("Book is now in reading", HttpStatus.ACCEPTED);
+    }
 }

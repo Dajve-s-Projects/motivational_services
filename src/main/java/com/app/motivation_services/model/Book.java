@@ -61,8 +61,7 @@ public class Book {
     @Column(name = "RATING")
     private double rating;
 
-    @Getter
-    @Setter
+
     @Column(name = "ISALREADYREAD")
     private boolean isAlreadyRead;
 
@@ -96,5 +95,13 @@ public class Book {
 
     public boolean getIsCurrentlyReading() {
         return isCurrentlyReading;
+    }
+
+    public boolean isAlreadyRead() {
+        return isAlreadyRead;
+    }
+
+    public void setAlreadyRead(boolean alreadyRead) {
+        isAlreadyRead = alreadyRead;
     }
 }
