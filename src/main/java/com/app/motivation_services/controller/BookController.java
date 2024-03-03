@@ -128,7 +128,6 @@ public class BookController {
     public ResponseEntity<List<Book>> getReadBooks(@RequestParam(required = false) Boolean read) {
         try {
             if (read == null) {
-                // If parameter is null, return all books
                 List<Book> booksList = new ArrayList<>(bookService.getAllBooks());
 
                 if (booksList.isEmpty()) {
@@ -137,11 +136,9 @@ public class BookController {
 
                 return new ResponseEntity<>(booksList, HttpStatus.OK);
             } else if (read) {
-                // Return book currently being read
                 List<Book> bookCurrentlyBeingRead = bookService.getBookInReading();
                 return new ResponseEntity<>(bookCurrentlyBeingRead, HttpStatus.OK);
             } else {
-                // Return unread books
                 List<Book> unreadBooks = bookService.getAllUnreadBooks();
                 return new ResponseEntity<>(unreadBooks, HttpStatus.OK);
             }
@@ -151,7 +148,7 @@ public class BookController {
     }
 
     @PutMapping("/book/read/{book-id}")
-    @Description("Read a book, that is already not read")
+    @Description("Read a book, that has not been read already")
     public ResponseEntity<String> readBookById(@PathVariable("book-id") Long id) {
         Optional<Book> bookById = bookService.getBookById(id);
 
