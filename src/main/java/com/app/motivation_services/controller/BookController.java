@@ -57,37 +57,35 @@ public class BookController {
         return new ResponseEntity<>(book, HttpStatus.OK);
     }
 
-    @PostMapping("/book")
-    @Description("Add a book")
-    public ResponseEntity<String> addBook(@RequestBody Book newBook) {
-        Optional<Author> authorByAuthorName = authorService.getAuthorByAuthorName(newBook.getAuthor().getAuthorName());
+    @GetMapping("/book/filter")
+    @Description("Returns all books that have NOT been read or return a SINGLE" +
+            "book that is currently being read depending on the 'read' parameter")
+    public ResponseEntity<List<Book>> getReadBooks(@RequestParam(required = false) Boolean read) {
+        try {
+            if (read == null) {
+                List<Book> booksList = new ArrayList<>(bookService.getAllBooks());
 
-        if (authorByAuthorName.isEmpty()) {
-            return new ResponseEntity<>("There is no author named " + newBook.getAuthor().getAuthorName(),
-                    HttpStatus.NOT_FOUND);
+                if (booksList.isEmpty()) {
+                    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                }
+
+                return new ResponseEntity<>(booksList, HttpStatus.OK);
+            } else if (read) {
+                List<Book> bookCurrentlyBeingRead = bookService.getBookInReading();
+                return new ResponseEntity<>(bookCurrentlyBeingRead, HttpStatus.OK);
+            } else {
+                List<Book> unreadBooks = bookService.getAllUnreadBooks();
+                return new ResponseEntity<>(unreadBooks, HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
 
-        Author author = authorByAuthorName.get();
-        Book book = new Book();
-
-        book.setTitle(newBook.getTitle());
-        book.setAuthor(author);
-        book.setDescription(newBook.getDescription());
-        book.setTotalChapters(newBook.getTotalChapters());
-        book.setCurrentChapter(newBook.getCurrentChapter());
-        book.setTotalPages(newBook.getTotalPages());
-        book.setCurrentPage(newBook.getCurrentPage());
-        book.setRating(newBook.getRating());
-        book.setAlreadyRead(newBook.isAlreadyRead());
-        book.setIsCurrentlyReading(newBook.getIsCurrentlyReading());
-        book.setStartReadingDate(newBook.getStartReadingDate());
-        book.setEndReadingDate(newBook.getEndReadingDate());
-        book.setBookOpinion(newBook.getBookOpinion());
-        book.setSpecialNotes(newBook.getSpecialNotes());
-
-        bookService.createBook(book);
-
-        return new ResponseEntity<>("Book successfully made", HttpStatus.CREATED);
+    @GetMapping("/book/completed")
+    @Description("Return all books that have been read")
+    public ResponseEntity<List<Book>> getAllCompletedBooks() {
+        return new ResponseEntity<>(bookService.getCompletedBooks().get(), HttpStatus.OK);
     }
 
     @PutMapping("/update/book/{book-id}")
@@ -122,31 +120,6 @@ public class BookController {
         return new ResponseEntity<>("No book found with id of " + id, HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/book/filter")
-    @Description("Returns all books that have NOT been read or return a SINGLE" +
-            "book that is currently being read depending on the 'read' parameter")
-    public ResponseEntity<List<Book>> getReadBooks(@RequestParam(required = false) Boolean read) {
-        try {
-            if (read == null) {
-                List<Book> booksList = new ArrayList<>(bookService.getAllBooks());
-
-                if (booksList.isEmpty()) {
-                    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-                }
-
-                return new ResponseEntity<>(booksList, HttpStatus.OK);
-            } else if (read) {
-                List<Book> bookCurrentlyBeingRead = bookService.getBookInReading();
-                return new ResponseEntity<>(bookCurrentlyBeingRead, HttpStatus.OK);
-            } else {
-                List<Book> unreadBooks = bookService.getAllUnreadBooks();
-                return new ResponseEntity<>(unreadBooks, HttpStatus.OK);
-            }
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
     @PutMapping("/book/read/{book-id}")
     @Description("Read a book, that has not been read already")
     public ResponseEntity<String> readBookById(@PathVariable("book-id") Long id) {
@@ -161,5 +134,45 @@ public class BookController {
         bookService.markBookAsCurrentlyReading(id);
 
         return new ResponseEntity<>("Book is now in reading", HttpStatus.ACCEPTED);
+    }
+
+    @PostMapping("/book")
+    @Description("Add a book")
+    public ResponseEntity<String> addBook(@RequestBody Book newBook) {
+        Optional<Author> authorByAuthorName = authorService.getAuthorByAuthorName(newBook.getAuthor().getAuthorName());
+
+        if (authorByAuthorName.isEmpty()) {
+            return new ResponseEntity<>("There is no author named " + newBook.getAuthor().getAuthorName(),
+                    HttpStatus.NOT_FOUND);
+        }
+
+        Author author = authorByAuthorName.get();
+        Book book = new Book();
+
+        book.setTitle(newBook.getTitle());
+        book.setAuthor(author);
+        book.setDescription(newBook.getDescription());
+        book.setTotalChapters(newBook.getTotalChapters());
+        book.setCurrentChapter(newBook.getCurrentChapter());
+        book.setTotalPages(newBook.getTotalPages());
+        book.setCurrentPage(newBook.getCurrentPage());
+        book.setRating(newBook.getRating());
+        book.setAlreadyRead(newBook.isAlreadyRead());
+        book.setIsCurrentlyReading(newBook.getIsCurrentlyReading());
+        book.setStartReadingDate(newBook.getStartReadingDate());
+        book.setEndReadingDate(newBook.getEndReadingDate());
+        book.setBookOpinion(newBook.getBookOpinion());
+        book.setSpecialNotes(newBook.getSpecialNotes());
+
+        bookService.createBook(book);
+
+        return new ResponseEntity<>("Book successfully made", HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/book/{book-id}")
+    @Description("Delete book by ID")
+    public ResponseEntity<String> deleteBookById(@PathVariable("book-id") Long id) {
+        String responseMessage = bookService.deleteBookById(id);
+        return new ResponseEntity<>(responseMessage, HttpStatus.OK); // this httpstatus is ok regardless of success of deleting book - fix later!!
     }
 }

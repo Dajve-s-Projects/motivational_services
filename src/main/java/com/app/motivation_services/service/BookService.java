@@ -58,4 +58,19 @@ public class BookService {
         Book bookById = getBookById(id).get();
         bookRepository.updateBookToReadById(bookById.getId());
     }
+
+    public Optional<List<Book>> getCompletedBooks() {
+        return bookRepository.completedBooks();
+    }
+
+    public String deleteBookById(Long id) {
+        Optional<Book> bookById = getBookById(id);
+        String returnMessage;
+        if (bookById.isEmpty()) returnMessage = "Book " + id + " is not in the Database";
+        else {
+            bookRepository.deleteById(id);
+            returnMessage = "Book successfully deleted";
+        }
+        return returnMessage;
+    }
 }

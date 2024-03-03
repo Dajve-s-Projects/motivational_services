@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
@@ -23,4 +24,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     @Transactional
     @Query("UPDATE Book b SET b.isCurrentlyReading = TRUE WHERE b.id = :id")
     void updateBookToReadById(@Param("id") Long id);
+
+    @Query("SELECT b FROM Book b WHERE b.isAlreadyRead = true")
+    Optional<List<Book>> completedBooks();
 }
