@@ -32,6 +32,6 @@ public class AuthorController {
     @Description("Create an author")
     public ResponseEntity<String> createAuthor(@RequestBody Author author) {
         authorService.addAuthor(author);
-        return new ResponseEntity<>("Note created successfully", HttpStatus.CREATED);
+        return new ResponseEntity<>("Author created successfully", HttpStatus.CREATED);
     }
 }
