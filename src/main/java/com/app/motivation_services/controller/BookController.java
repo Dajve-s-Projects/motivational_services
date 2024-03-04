@@ -2,6 +2,7 @@ package com.app.motivation_services.controller;
 
 import com.app.motivation_services.model.Author;
 import com.app.motivation_services.model.Book;
+import com.app.motivation_services.model.EditBook;
 import com.app.motivation_services.service.AuthorService;
 import com.app.motivation_services.service.BookService;
 import jdk.jfr.Description;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,31 +95,46 @@ public class BookController {
     public ResponseEntity<?> updateBookById(@PathVariable("book-id") Long id, @RequestBody Book book) {
         Optional<Book> bookById = bookService.getBookById(id);
 
-        if (bookById.isPresent()) {
-            Book existingBook = bookById.get();
+        if (bookById.isEmpty()) return new ResponseEntity<>("No book found with id of " + id, HttpStatus.NOT_FOUND);
 
-            Author existingAuthor = existingBook.getAuthor();
+        Book existingBook = bookById.get();
 
-            existingBook.setTitle(book.getTitle());
-            existingBook.setAuthor(existingAuthor);
-            existingBook.setDescription(book.getDescription());
-            existingBook.setTotalChapters(book.getTotalChapters());
-            existingBook.setCurrentPage(book.getCurrentPage());
-            existingBook.setTotalPages(book.getTotalPages());
-            existingBook.setCurrentChapter(book.getCurrentChapter());
-            existingBook.setRating(book.getRating());
-            existingBook.setAlreadyRead(book.isAlreadyRead());
-            existingBook.setIsCurrentlyReading(book.getIsCurrentlyReading());
-            existingBook.setStartReadingDate(book.getStartReadingDate());
-            existingBook.setEndReadingDate(book.getEndReadingDate());
-            existingBook.setBookOpinion(book.getBookOpinion());
-            existingBook.setSpecialNotes(book.getSpecialNotes());
+        Author existingAuthor = existingBook.getAuthor();
 
-            bookService.updateBook(existingBook);
-            return new ResponseEntity<>(existingBook, HttpStatus.OK);
+        existingBook.setTitle(book.getTitle());
+        existingBook.setAuthor(existingAuthor);
+        existingBook.setDescription(book.getDescription());
+        existingBook.setTotalChapters(book.getTotalChapters());
+        existingBook.setCurrentPage(book.getCurrentPage());
+        existingBook.setTotalPages(book.getTotalPages());
+        existingBook.setCurrentChapter(book.getCurrentChapter());
+        existingBook.setRating(book.getRating());
+        existingBook.setAlreadyRead(book.isAlreadyRead());
+        existingBook.setIsCurrentlyReading(book.getIsCurrentlyReading());
+        existingBook.setStartReadingDate(book.getStartReadingDate());
+        existingBook.setEndReadingDate(book.getEndReadingDate());
+        existingBook.setBookOpinion(book.getBookOpinion());
+        existingBook.setSpecialNotes(book.getSpecialNotes());
+
+        bookService.updateBook(existingBook);
+
+        return new ResponseEntity<>(existingBook, HttpStatus.OK);
+    }
+
+    @PutMapping("/edit/book/{book-id}")
+    @Description("Update a ")
+    public ResponseEntity<String> updateBookWithEditFormById(@PathVariable("book-id") Long id, @RequestBody EditBook editForm) {
+        try {
+            Book book = bookService.getBookById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not found"));
+            Book updatedBook = bookService.mergeEditFormAndBookObject(editForm, book);
+            if (updatedBook == null) return  new ResponseEntity<>("There is no author with name: " + editForm.getAuthor(), HttpStatus.NOT_FOUND);
+            bookService.updateBook(updatedBook);
+            return new ResponseEntity<>("Book successfully updated", HttpStatus.OK);
+        } catch (ResponseStatusException e) {
+            return new ResponseEntity<>(e.getReason(), e.getStatusCode());
+        } catch (Exception e) {
+            return new ResponseEntity<>("An error occurred while updating the book", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        return new ResponseEntity<>("No book found with id of " + id, HttpStatus.NOT_FOUND);
     }
 
     @PutMapping("/book/read/{book-id}")

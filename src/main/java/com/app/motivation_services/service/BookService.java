@@ -1,6 +1,8 @@
 package com.app.motivation_services.service;
 
+import com.app.motivation_services.model.Author;
 import com.app.motivation_services.model.Book;
+import com.app.motivation_services.model.EditBook;
 import com.app.motivation_services.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,10 +14,12 @@ import java.util.Optional;
 public class BookService {
 
     private final BookRepository bookRepository;
+    private final AuthorService authorService;
 
     @Autowired
-    public BookService(BookRepository bookRepository) {
+    public BookService(BookRepository bookRepository, AuthorService authorService) {
         this.bookRepository = bookRepository;
+        this.authorService = authorService;
     }
 
     public List<Book> getAllBooks() {
@@ -30,8 +34,8 @@ public class BookService {
         bookRepository.save(book);
     }
 
-    public void updateBook(Book book) {
-        bookRepository.save(book);
+    public Book updateBook(Book book) {
+        return bookRepository.save(book);
     }
 
     public List<Book> getBookInReading() {
@@ -72,5 +76,25 @@ public class BookService {
             returnMessage = "Book successfully deleted";
         }
         return returnMessage;
+    }
+
+    public Book mergeEditFormAndBookObject(EditBook editForm, Book book) {
+        Author newAuthor = new Author();
+        boolean updatedAuthorAlreadyMatchesCurrentAuthor = editForm.getAuthor().equals(book.getAuthor().getAuthorName());
+        if (updatedAuthorAlreadyMatchesCurrentAuthor) newAuthor.setId(book.getAuthor().getId());
+        else {
+            Optional<Author> authorByAuthorName = authorService.getAuthorByAuthorName(editForm.getAuthor());
+            if (authorByAuthorName.isEmpty()) return null;
+            newAuthor.setId(authorByAuthorName.get().getId());
+        }
+        newAuthor.setAuthorName(editForm.getAuthor());
+
+        book.setTitle(editForm.getTitle());
+        book.setTotalChapters(editForm.getChapters());
+        book.setTotalPages(editForm.getPages());
+        book.setAuthor(newAuthor);
+        book.setStartReadingDate(editForm.getStartReadingDate());
+
+        return book;
     }
 }
