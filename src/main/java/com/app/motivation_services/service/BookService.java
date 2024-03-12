@@ -7,6 +7,8 @@ import com.app.motivation_services.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,6 +62,15 @@ public class BookService {
 
     public void markBookAsCurrentlyReading(Long id) {
         Book bookById = getBookById(id).get();
+
+        // SET CURRENT READING DATE TO TODAY
+        LocalDateTime currentDate = LocalDateTime.now();
+        bookRepository.setCurrentReadingTimeToNowTime(id, currentDate);
+
+        // SET END READING DATE TO A FUTURE DAY
+        LocalDateTime futureDate = LocalDateTime.of(9999, 12, 31, 1, 9, 24);
+        bookRepository.setEndReadingTimeToDefaultTime(id, futureDate);
+
         bookRepository.updateBookToReadById(bookById.getId());
     }
 
