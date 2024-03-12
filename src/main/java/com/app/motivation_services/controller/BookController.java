@@ -6,6 +6,7 @@ import com.app.motivation_services.model.EditBook;
 import com.app.motivation_services.service.AuthorService;
 import com.app.motivation_services.service.BookService;
 import jdk.jfr.Description;
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -122,12 +123,13 @@ public class BookController {
     }
 
     @PutMapping("/edit/book/{book-id}")
-    @Description("Update a ")
+    @Description("Update a with the edit form")
     public ResponseEntity<String> updateBookWithEditFormById(@PathVariable("book-id") Long id, @RequestBody EditBook editForm) {
         try {
             Book book = bookService.getBookById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not found"));
             Book updatedBook = bookService.mergeEditFormAndBookObject(editForm, book);
-            if (updatedBook == null) return  new ResponseEntity<>("There is no author with name: " + editForm.getAuthor(), HttpStatus.NOT_FOUND);
+            if (updatedBook == null)
+                return new ResponseEntity<>("There is no author with name: " + editForm.getAuthor(), HttpStatus.NOT_FOUND);
             bookService.updateBook(updatedBook);
             return new ResponseEntity<>("Book successfully updated", HttpStatus.OK);
         } catch (ResponseStatusException e) {
@@ -155,7 +157,7 @@ public class BookController {
 
     @PostMapping("/book")
     @Description("Add a book")
-    public ResponseEntity<String> addBook(@RequestBody Book newBook) {
+    public ResponseEntity<String> addBook(@RequestBody @NonNull Book newBook) {
         Optional<Author> authorByAuthorName = authorService.getAuthorByAuthorName(newBook.getAuthor().getAuthorName());
 
         if (authorByAuthorName.isEmpty()) {

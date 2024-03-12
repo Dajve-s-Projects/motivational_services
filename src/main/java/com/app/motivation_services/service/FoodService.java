@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class FoodService {
@@ -25,4 +24,20 @@ public class FoodService {
     public List<FoodStat> getAllFoodStats() {
         return foodRepository.findAll();
     }
+
+    public double getKDR() {
+        List<FoodStat> allRecords = foodRepository.findAll();
+        if (allRecords.isEmpty()) return 0;
+
+        int good = 0;
+        int bad = 0;
+
+        for (FoodStat allRecord : allRecords) {
+            if (allRecord.getDailyStatus().equalsIgnoreCase("good")) good+=1;
+            else bad+=1;
+        }
+
+        return (double) good / bad;
+    }
 }
+
