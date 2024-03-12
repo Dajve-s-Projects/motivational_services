@@ -44,4 +44,11 @@ public class FoodController {
         FoodStat foodStat = foodService.addFoodStatus(foodObject);
         return new ResponseEntity<>(foodStat, HttpStatus.CREATED);
     }
+
+    @GetMapping("/kdr")
+    @Description("Get the Good Food Bad Food Ratio")
+    public ResponseEntity<Double> getGoodBadRatio() {
+        double kd = foodService.getKDR();
+        return new ResponseEntity<>(kd, HttpStatus.OK);
+    }
 }
