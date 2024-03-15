@@ -3,12 +3,12 @@ package com.app.motivation_services.service;
 import com.app.motivation_services.model.Author;
 import com.app.motivation_services.model.Book;
 import com.app.motivation_services.model.EditBook;
+import com.app.motivation_services.model.SubmitBook;
 import com.app.motivation_services.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -107,5 +107,26 @@ public class BookService {
         book.setStartReadingDate(editForm.getStartReadingDate());
 
         return book;
+    }
+
+    public String submitBook(Long id, SubmitBook submitBook) {
+        Optional<Book> bookById = getBookById(id);
+        String returnMessage;
+        if (bookById.isEmpty()) returnMessage = "Book " + id + " is not in the Database";
+        else {
+            Book oldBook = bookById.get();
+            oldBook.setIsCurrentlyReading(false);
+            oldBook.setAlreadyRead(true);
+
+            oldBook.setBookOpinion(submitBook.getBookOpinion());
+            oldBook.setSpecialNotes(submitBook.getSpecialNotes());
+            oldBook.setRating(submitBook.getRating());
+            oldBook.setEndReadingDate(LocalDateTime.now());
+
+            bookRepository.save(oldBook);
+
+            returnMessage = "Book submitted deleted";
+        }
+        return returnMessage;
     }
 }

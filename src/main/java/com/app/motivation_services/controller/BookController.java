@@ -3,6 +3,7 @@ package com.app.motivation_services.controller;
 import com.app.motivation_services.model.Author;
 import com.app.motivation_services.model.Book;
 import com.app.motivation_services.model.EditBook;
+import com.app.motivation_services.model.SubmitBook;
 import com.app.motivation_services.service.AuthorService;
 import com.app.motivation_services.service.BookService;
 import jdk.jfr.Description;
@@ -10,7 +11,15 @@ import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
@@ -153,6 +162,15 @@ public class BookController {
         bookService.markBookAsCurrentlyReading(id);
 
         return new ResponseEntity<>("Book is now in reading", HttpStatus.ACCEPTED);
+    }
+
+    @PutMapping("/book/submit/{book-id}")
+    @Description("Submit (through the submit UI form) a book that is in the process of reading to a book that is already read." +
+            "FYI the submissionDate in the SubmitBook object is overridden when submitting the book. A recommended default for the request paylaod is 9999-12-31 01:09:24")
+    public ResponseEntity<String> submitBook(@PathVariable("book-id") Long id, @RequestBody @NonNull SubmitBook submitBook) {
+        String submitBookResponse = bookService.submitBook(id, submitBook);
+        if (submitBookResponse.contains("submitted")) return new ResponseEntity<>(submitBookResponse, HttpStatus.OK);
+        return new ResponseEntity<>(submitBookResponse, HttpStatus.NOT_FOUND);
     }
 
     @PostMapping("/book")
