@@ -88,7 +88,7 @@ CREATE TABLE Note
 (
     id                   BIGINT PRIMARY KEY AUTO_INCREMENT,
     title                VARCHAR(255) NOT NULL,
-    actualNote           VARCHAR(255) NOT NULL,
+    actualNote           VARCHAR(1000) NOT NULL,
     emotion_id           BIGINT       NOT NULL,
     dateOfNoteSubmission DATETIME     NOT NULL,
     FOREIGN KEY (emotion_id) REFERENCES Emotion (id)
